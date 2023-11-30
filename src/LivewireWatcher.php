@@ -4,15 +4,21 @@ namespace Fused\TelescopeLivewire;
 
 use Illuminate\Foundation\Http\Events\RequestHandled;
 use Illuminate\Http\Request;
+use Laravel\Telescope\Contracts\EntriesRepository;
 use Laravel\Telescope\IncomingEntry;
 use Laravel\Telescope\Telescope;
 use Laravel\Telescope\Watchers\RequestWatcher;
+use Livewire\Livewire;
 use Livewire\Mechanisms\HandleComponents\HandleComponents;
 
 class LivewireWatcher extends RequestWatcher
 {
     public function register($app)
     {
+        Livewire::listen('destroy', function () use ($app) {
+            Telescope::store($app[EntriesRepository::class]);
+        });
+
         Telescope::filter(function (IncomingEntry $entry): bool {
             if (strpos($entry->content['controller_action'] ?? null, 'Livewire\Mechanisms') !== false) {
                 return false;

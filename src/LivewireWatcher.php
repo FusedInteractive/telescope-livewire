@@ -18,7 +18,7 @@ class LivewireWatcher extends RequestWatcher
 
     public function recordRequest(RequestHandled $event): void
     {
-        if (! Telescope::isRecording() || ! $this->checkForLivewireMeachanism($event)) {
+        if (! Telescope::isRecording() || ! $this->checkForLivewireMechanism($event)) {
             return;
         }
 
@@ -48,7 +48,7 @@ class LivewireWatcher extends RequestWatcher
         }
     }
 
-    private function checkForLivewireMeachanism(RequestHandled $event): bool
+    private function checkForLivewireMechanism(RequestHandled $event): bool
     {
         return optional($event->request->route())->named('*livewire.*') == true;
     }

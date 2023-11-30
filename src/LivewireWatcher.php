@@ -15,7 +15,7 @@ class LivewireWatcher extends RequestWatcher
 {
     public function register($app)
     {
-        Livewire::listen('destroy', function () use ($app) {
+        Livewire::listen('call', function () use ($app) {
             Telescope::store($app[EntriesRepository::class]);
         });
 

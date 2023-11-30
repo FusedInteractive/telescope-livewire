@@ -37,7 +37,7 @@ class LivewireWatcher extends RequestWatcher
                     'controller_action' => get_class($component).'@'.$call['method'],
                     'middleware' => array_values(optional($event->request->route())->gatherMiddleware() ?? []),
                     'headers' => $this->headers($event->request->headers->all()),
-                    'payload' => $call['params'] ?? [],
+                    'payload' => $this->payload($snapshot['data'] ?? []),
                     'session' => $this->payload($this->sessionVariables($event->request)),
                     'response_status' => $event->response->getStatusCode(),
                     'response' => $this->response($event->response),

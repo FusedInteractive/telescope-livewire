@@ -13,6 +13,14 @@ class LivewireWatcher extends RequestWatcher
 {
     public function register($app)
     {
+        Telescope::filter(function (IncomingEntry $entry): bool {
+            if (strpos($entry->content['controller_action'] ?? null, 'Livewire\Mechanisms') !== false) {
+                return false;
+            }
+
+            return true;
+        });
+
         $app['events']->listen(RequestHandled::class, [$this, 'recordRequest']);
     }
 

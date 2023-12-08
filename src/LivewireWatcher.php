@@ -46,7 +46,7 @@ class LivewireWatcher extends RequestWatcher
             foreach ($calls as $call) {
                 Telescope::recordRequest(IncomingEntry::make([
                     'ip_address' => $event->request->ip(),
-                    'uri' => '/'.$snapshot['memo']['path'],
+                    'uri' => '/'.ltrim($snapshot['memo']['path'], '/'),
                     'method' => $event->request->method(),
                     'controller_action' => get_class($component).'@'.$call['method'],
                     'middleware' => array_values(optional($event->request->route())->gatherMiddleware() ?? []),

@@ -38,7 +38,7 @@ class LivewireWatcher extends RequestWatcher
 
         $startTime = defined('LARAVEL_START') ? LARAVEL_START : $event->request->server('REQUEST_TIME_FLOAT');
 
-        foreach ($event->request->json('components') as $component) {
+        foreach ($event->request->json('components', []) as $component) {
             $calls = $component['calls'];
             $snapshot = json_decode($component['snapshot'], associative: true);
             [$component] = app(HandleComponents::class)->fromSnapshot($snapshot);

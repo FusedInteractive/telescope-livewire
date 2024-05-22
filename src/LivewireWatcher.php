@@ -20,7 +20,7 @@ class LivewireWatcher extends RequestWatcher
         });
 
         Telescope::filter(function (IncomingEntry $entry): bool {
-            if (strpos($entry->content['controller_action'] ?? null, 'Livewire\Mechanisms') !== false) {
+            if (! empty($entry->content['controller_action']) && strpos($entry->content['controller_action'], 'Livewire\Mechanisms') !== false) {
                 return false;
             }
 

@@ -4,12 +4,14 @@ namespace Fused\TelescopeLivewire;
 
 use Illuminate\Foundation\Http\Events\RequestHandled;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Laravel\Telescope\Contracts\EntriesRepository;
 use Laravel\Telescope\IncomingEntry;
 use Laravel\Telescope\Telescope;
 use Laravel\Telescope\Watchers\RequestWatcher;
 use Livewire\Livewire;
 use Livewire\Mechanisms\HandleComponents\HandleComponents;
+use Symfony\Component\HttpFoundation\Response;
 
 class LivewireWatcher extends RequestWatcher
 {
@@ -53,13 +55,26 @@ class LivewireWatcher extends RequestWatcher
                     'headers' => $this->headers($event->request->headers->all()),
                     'payload' => $this->payload($snapshot['data'] ?? []),
                     'session' => $this->payload($this->sessionVariables($event->request)),
+                    'response_headers' => $this->headers($event->response->headers->all()),
                     'response_status' => $event->response->getStatusCode(),
-                    'response' => $this->response($event->response),
+                    'response' => $this->removeHtmlFromResponse($event->response),
                     'duration' => $startTime ? floor((microtime(true) - $startTime) * 1000) : null,
                     'memory' => round(memory_get_peak_usage(true) / 1024 / 1024, 1),
                 ]));
             }
         }
+    }
+
+    private function removeHtmlFromResponse(Response $response): array
+    {
+        $content = $this->response($response);
+
+        foreach (Arr::get($content, 'components') as $key => $component) {
+            Arr::set($component, 'effects.html', 'HTML Response');
+            Arr::set($content, 'components.'.$key, $component);
+        }
+
+        return $content;
     }
 
     private function checkForLivewireMechanism(RequestHandled $event): bool

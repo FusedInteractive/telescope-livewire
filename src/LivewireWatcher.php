@@ -65,13 +65,15 @@ class LivewireWatcher extends RequestWatcher
         }
     }
 
-    private function removeHtmlFromResponse(Response $response): array
+    private function removeHtmlFromResponse(Response $response): array|string
     {
         $content = $this->response($response);
 
-        foreach (Arr::get($content, 'components', []) as $key => $component) {
-            Arr::set($component, 'effects.html', 'HTML Response');
-            Arr::set($content, 'components.'.$key, $component);
+        if (is_array($content)) {
+            foreach (Arr::get($content, 'components', []) as $key => $component) {
+                Arr::set($component, 'effects.html', 'HTML Response');
+                Arr::set($content, 'components.'.$key, $component);
+            }
         }
 
         return $content;

@@ -69,7 +69,7 @@ class LivewireWatcher extends RequestWatcher
     {
         $content = $this->response($response);
 
-        foreach (Arr::get($content, 'components') as $key => $component) {
+        foreach (Arr::get($content, 'components', []) as $key => $component) {
             Arr::set($component, 'effects.html', 'HTML Response');
             Arr::set($content, 'components.'.$key, $component);
         }
